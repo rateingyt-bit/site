@@ -29,6 +29,9 @@
   @media (hover: hover) and (pointer: fine) {
     * { cursor: none !important; }
   }
+  @media (pointer: coarse), (hover: none) {
+    *, *::before, *::after { cursor: auto !important; }
+  }
   html { scroll-behavior: smooth; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
   body {
