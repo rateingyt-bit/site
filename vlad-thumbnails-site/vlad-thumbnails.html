@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vlad · Thumbnail Designer for YouTubers</title>
+<meta name="description" content="Premium YouTube thumbnails built for CTR. Designed for creators who care about growth, not just looks." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg-2: #141414;
+    --card: #1E1E1E;
+    --surface: rgba(255,255,255,0.04);
+    --surface-2: rgba(255,61,61,0.07);
+    --border: #2A2A2A;
+    --border-strong: #3A3A3A;
+    --text: #FFFFFF;
+    --muted: #8A8A8A;
+    --muted-2: #606060;
+    --accent: #FF3D3D;
+    --accent-2: #FF6B6B;
+    --accent-subtle: rgba(255,61,61,0.1);
+    --ring: 0 0 0 1px rgba(255,61,61,0.15);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  body {
+    background:
+      radial-gradient(900px 500px at 80% -5%, rgba(255,61,61,0.12), transparent 60%),
+      radial-gradient(600px 400px at -5% 20%, rgba(255,61,61,0.07), transparent 60%),
+      var(--bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', 'Inter', sans-serif; letter-spacing: -0.02em; margin: 0; }
+  p { margin: 0; color: var(--muted); line-height: 1.6; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 110px 0; position: relative; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .h-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 700; line-height: 1.08; margin-top: 18px; }
+  .h-sub { margin-top: 16px; font-size: 17px; max-width: 640px; }
+
+  /* ===== NAV ===== */
+  header.nav {
+    position: fixed; inset: 16px 16px auto 16px; z-index: 50;
+    display: flex; justify-content: center; pointer-events: none;
+  }
+  .nav-inner {
+    pointer-events: auto; width: 100%; max-width: 1100px;
+    display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px;
+    padding: 10px 14px 10px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: linear-gradient(135deg, rgba(10,10,10,0.88), rgba(20,20,20,0.72));
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow: 0 18px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .brand { font-family: 'Space Grotesk'; font-weight: 700; font-size: 19px; letter-spacing: -0.01em; }
+  .brand span { background: linear-gradient(90deg, #fff, #FF6B6B); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  nav.links { display: flex; gap: 4px; justify-content: center; }
+  nav.links a {
+    padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.72);
+    transition: background .2s ease, color .2s ease;
+  }
+  nav.links a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+  .nav-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px; border-radius: 999px; font-weight: 600; font-size: 14px;
+    color: #fff;
+    background: linear-gradient(90deg, #FF3D3D, #cc2020);
+    border: 1px solid rgba(255,61,61,0.35);
+    box-shadow: 0 0 30px rgba(255,61,61,0.3);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 40px rgba(255,61,61,0.5); }
+  .burger { display: none; width: 40px; height: 40px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: #fff; }
+
+  @media (max-width: 860px) {
+    nav.links { display: none; }
+    .nav-cta { display: none; }
+    .burger { display: inline-flex; align-items:center; justify-content:center; }
+    .nav-inner { grid-template-columns: 1fr auto; }
+  }
+
+  /* ===== HERO ===== */
+  .hero { padding: 180px 0 80px; text-align: center; }
+  .hero .title {
+    font-size: clamp(40px, 6.4vw, 88px); font-weight: 800; line-height: 1; letter-spacing: -0.03em;
+  }
+  .gradient-text {
+    background: linear-gradient(90deg, #fff 10%, #FF6B6B 55%, #FF3D3D 90%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p.lead { margin: 22px auto 0; max-width: 640px; font-size: 19px; color: #c9c9d6; }
+  .badges { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 14px; color: #e4e4ee; font-weight: 500;
+  }
+  .hero .cta-row { margin-top: 40px; display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 28px; border-radius: 999px; font-weight: 600; font-size: 16px; color: #fff;
+    background: linear-gradient(90deg, #FF3D3D, #cc2020);
+    border: 1px solid rgba(255,61,61,0.3);
+    box-shadow: 0 0 40px rgba(255,61,61,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 55px rgba(255,61,61,0.6); }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 28px; border-radius: 999px; font-weight: 600; font-size: 16px; color: #fff;
+    background: var(--surface); border: 1px solid var(--border-strong);
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .btn-outline:hover { background: var(--surface-2); border-color: rgba(255,255,255,0.3); }
+  .trust { margin-top: 28px; font-size: 13px; color: var(--muted-2); letter-spacing: 0.04em; }
+
+  /* ===== SECTION HEADINGS ===== */
+  .sec-head { text-align: center; margin-bottom: 56px; }
+  .sec-head h2 { font-size: clamp(30px, 4vw, 48px); font-weight: 700; }
+  .sec-head p { margin: 14px auto 0; max-width: 620px; font-size: 17px; }
+
+  /* ===== WORK MARQUEE ===== */
+  .marquees { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+  .marquee {
+    position: relative;
+    overflow-x: clip;
+    overflow-y: visible;
+    cursor: grab;
+    touch-action: pan-y;
+  }
+  .marquee.dragging { cursor: grabbing; }
+  .marquee-track {
+    display: flex; gap: 20px; width: max-content;
+    will-change: transform;
+    transform: translate3d(0,0,0);
+    backface-visibility: hidden;
+  }
+
+  .thumb {
+    flex: 0 0 auto;
+    width: 360px; aspect-ratio: 16/9; border-radius: 18px; position: relative; overflow: hidden;
+    background:
+      linear-gradient(135deg, rgba(124,58,237,0.35), rgba(59,130,246,0.25) 40%, rgba(236,72,153,0.25));
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    transition: transform .3s ease, box-shadow .3s ease;
+    user-select: none; -webkit-user-drag: none;
+  }
+  @media (max-width: 600px) { .thumb { width: 280px; } }
+  .thumb::after {
+    content: ""; position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .thumb {
+    transition: transform .35s cubic-bezier(.34,1.4,.64,1), box-shadow .35s ease, z-index 0s;
+    z-index: 1;
+    position: relative;
+  }
+  .thumb:hover {
+    transform: scale(1.09);
+    z-index: 20;
+    box-shadow: 0 28px 70px rgba(255,61,61,0.45), 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none; border-radius: 18px; }
+
+  /* ===== PROCESS ===== */
+  .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  @media (max-width: 860px) { .process-grid { grid-template-columns: 1fr; } }
+  .step {
+    padding: 36px 32px; border-radius: 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: border-color .2s ease, transform .2s ease;
+  }
+  .step:hover { border-color: rgba(255,61,61,0.35); transform: translateY(-3px); }
+  .step-num {
+    width: 44px; height: 44px; border-radius: 14px;
+    background: var(--accent-subtle); border: 1px solid rgba(255,61,61,0.25);
+    display: grid; place-items: center; font-family: 'Space Grotesk'; font-weight: 700; font-size: 16px; color: var(--accent);
+    margin-bottom: 22px;
+  }
+  .step-text .step-no { display: none; }
+  .step-text h3 { font-size: 22px; font-weight: 700; }
+  .step-text p { margin-top: 12px; font-size: 15px; }
+
+  /* ===== RESULTS ===== */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px; }
+  @media (max-width: 860px) { .stats { grid-template-columns: repeat(2,1fr); } }
+  .stat {
+    padding: 24px; border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--card);
+  }
+  .stat .v { font-family: 'Space Grotesk'; font-size: 30px; font-weight: 700; margin-top: 8px; background: linear-gradient(90deg, #fff, #FF6B6B); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat .k { font-size: 12px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
+  .screens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 860px) { .screens { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 560px) { .screens { grid-template-columns: 1fr; } }
+  .screen {
+    border-radius: 16px; overflow: hidden; position: relative;
+    border: 1px solid var(--border);
+    background: var(--card);
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .screen:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+  .screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .screen .ctr {
+    position: absolute; right: 14px; bottom: 14px;
+    font-family: 'Space Grotesk'; font-weight: 700; font-size: 20px;
+    padding: 5px 12px; border-radius: 10px;
+    background: rgba(0,0,0,0.65); border: 1px solid rgba(34,197,94,0.5);
+    color: #86efac; backdrop-filter: blur(8px);
+  }
+
+  /* ===== TESTIMONIALS ===== */
+  .tcards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media (max-width: 860px) { .tcards { grid-template-columns: 1fr; } }
+  @media (min-width: 861px) { .tcards { grid-template-columns: repeat(2, 1fr); } }
+  .tcard {
+    padding: 28px; border-radius: 22px;
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  .tcard .who { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .avatar {
+    width: 46px; height: 46px; border-radius: 999px;
+    background: linear-gradient(135deg, #FF3D3D, #cc2020);
+    display: grid; place-items: center; font-weight: 700; font-size: 15px;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .who .name { font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .verified { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 999px; background: #FF3D3D; font-size: 10px; color: #fff; font-weight: 800; }
+  .who .sub { font-size: 13px; color: var(--muted); }
+  .tcard blockquote { margin: 0; font-size: 16px; line-height: 1.6; color: #e8e8e8; }
+
+  /* ===== PRICING ===== */
+  .prices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .prices { grid-template-columns: 1fr; } }
+  .price {
+    padding: 32px; border-radius: 26px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column; position: relative;
+  }
+  .price.featured {
+    border-color: rgba(255,61,61,0.45);
+    background: linear-gradient(180deg, rgba(255,61,61,0.1), var(--card));
+    box-shadow: 0 30px 80px rgba(255,61,61,0.18);
+  }
+  .price .tag { position: absolute; top: -12px; right: 20px; padding: 6px 12px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; border-radius: 999px; background: linear-gradient(90deg, #FF3D3D, #cc2020); border: 1px solid rgba(255,255,255,0.15); }
+  .price h3 { font-size: 24px; }
+  .price .lead { margin-top: 10px; font-size: 15px; color: var(--muted); min-height: 44px; }
+  .price ul { list-style: none; padding: 0; margin: 22px 0; display: flex; flex-direction: column; gap: 12px; }
+  .price li { position: relative; padding-left: 26px; font-size: 15px; color: #e0e0e8; }
+  .price li::before {
+    content: ""; position: absolute; left: 0; top: 6px; width: 16px; height: 16px; border-radius: 999px;
+    background: linear-gradient(135deg, #FF3D3D, #cc2020);
+  }
+  .price li::after {
+    content: ""; position: absolute; left: 4px; top: 10px; width: 8px; height: 4px;
+    border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg);
+  }
+  .price .btn-outline { margin-top: auto; justify-content: center; }
+
+  /* ===== CONTACT ===== */
+  .contact-wrap { text-align: center; }
+  .socials { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 32px; }
+  .social {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border); font-weight: 600;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .social:hover { transform: translateY(-2px); background: var(--accent-subtle); border-color: rgba(255,61,61,0.35); }
+  .social svg { width: 18px; height: 18px; }
+  .email { display: inline-block; margin-top: 28px; font-size: 18px; color: #dcdcf0; padding: 10px 20px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); }
+
+  /* ===== FAQ ===== */
+  .faq { max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  #work, #results, #pricing { background: var(--bg-2); }
+  #process, #testimonials, #faq { background: var(--bg); }
+
+  .faq details {
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+    padding: 0; overflow: hidden; transition: border-color .2s ease, background .2s ease;
+  }
+  .faq details[open] { border-color: rgba(255,61,61,0.35); background: rgba(255,61,61,0.05); }
+  .faq summary {
+    list-style: none; cursor: pointer; padding: 20px 24px; font-weight: 600; font-size: 17px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: "+"; font-size: 22px; font-weight: 400; color: var(--accent);
+    transition: transform .25s ease;
+  }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq .answer { padding: 0 24px 22px; color: var(--muted); line-height: 1.6; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    padding: 48px 0 36px; border-top: 1px solid var(--border); margin-top: 40px;
+    text-align: center;
+  }
+  footer .brand { font-size: 18px; }
+  footer p { margin-top: 8px; font-size: 14px; color: var(--muted); }
+  footer .fsocials { display: flex; gap: 10px; justify-content: center; margin-top: 18px; }
+  footer .fsocials a {
+    width: 38px; height: 38px; border-radius: 999px; display: grid; place-items: center;
+    border: 1px solid var(--border); background: var(--surface);
+    transition: background .2s ease, transform .2s ease;
+  }
+  footer .fsocials a:hover { background: var(--surface-2); transform: translateY(-2px); }
+  footer small { display: block; margin-top: 22px; color: var(--muted-2); font-size: 12px; }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .hero .cta-row .btn-primary { animation: floaty 5s ease-in-out infinite; }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#home"><span>Vlad</span> Thumbnails</a>
+    <nav class="links">
+      <a href="#home">Home</a>
+      <a href="#work">Work</a>
+      <a href="#process">Process</a>
+      <a href="#results">Results</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <a class="nav-cta" href="#contact">Contact →</a>
+    <button class="burger" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="container">
+    <span class="eyebrow">● Available for new projects</span>
+    <h1 class="title">Thumbnails That<br/><span class="gradient-text">Make People Click</span></h1>
+    <p class="lead">Design for YouTubers who care about CTR — not just aesthetics.</p>
+
+    <div class="badges">
+      <span class="badge">🚀 Delivery in 24–48 hours</span>
+      <span class="badge">📈 3–5 years of experience</span>
+      <span class="badge">🔁 Unlimited revisions</span>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn-primary" href="#contact">Start now <span>→</span></a>
+      <a class="btn-outline" href="#process">Process</a>
+    </div>
+
+    <p class="trust">TRUSTED BY CREATORS WITH 1M TO 35M SUBS</p>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Work Examples</span>
+      <h2 style="margin-top:16px">Take a look at what I'm capable of</h2>
+      <p>Thumbnails designed for impact, clarity, and maximum click-through rate.</p>
+    </div>
+  </div>
+  <div class="marquees">
+      <div class="marquee" data-dir="left" data-speed="40">
+        <div class="marquee-track">
+          <div class="thumb"><img src="works/01.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/02.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/03.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/04.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/05.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/06.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/01.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/02.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/03.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/04.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/05.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/06.jpg" alt="" draggable="false"></div>
+        </div>
+      </div>
+
+      <div class="marquee" data-dir="right" data-speed="50">
+        <div class="marquee-track">
+          <div class="thumb"><img src="works/07.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/08.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/09.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/10.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/11.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/12.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/07.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/08.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/09.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/10.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/11.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/12.jpg" alt="" draggable="false"></div>
+        </div>
+      </div>
+
+      <div class="marquee" data-dir="left" data-speed="35">
+        <div class="marquee-track">
+          <div class="thumb"><img src="works/13.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/14.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/15.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/16.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/17.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb"><img src="works/18.jpg" alt="Thumbnail" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/13.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/14.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/15.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/16.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/17.jpg" alt="" draggable="false"></div>
+          <div class="thumb" aria-hidden="true"><img src="works/18.jpg" alt="" draggable="false"></div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Process</span>
+      <h2 style="margin-top:16px">How I Work</h2>
+      <p>Simple, fast, and built around your channel's growth.</p>
+    </div>
+
+    <div class="process-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-text">
+          <h3>Discover &amp; Strategy</h3>
+          <p>You share the video topic and any ideas or references you have. I analyze what makes your audience click and we lock in 2–3 strong concepts focused on maximum CTR — not just how it looks.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-text">
+          <h3>Design &amp; Refinement</h3>
+          <p>Once we agree on a direction, I build it out fully. You give feedback, I adjust. We keep going until it's exactly right — no rush, no limits on revisions.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-text">
+          <h3>Final Delivery</h3>
+          <p>You get the finished thumbnail, fully optimized and export-ready. Upload it, run your test, and let the numbers do the talking.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Results</span>
+      <h2 style="margin-top:16px">Real Numbers. Real Channels.</h2>
+      <p>These aren't estimates — this is live data from an actual YouTube channel.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="k">📊 Avg. CTR</div><div class="v">6–8%</div></div>
+      <div class="stat"><div class="k">📈 Avg. Impressions</div><div class="v">10–20M</div></div>
+      <div class="stat"><div class="k">🏆 Best Result</div><div class="v">8.5% / 10M</div></div>
+      <div class="stat"><div class="k">📺 SRT Len</div><div class="v">1.08M subs</div></div>
+    </div>
+
+    <div class="screens">
+      <div class="screen">
+        <img src="ctr/01.jpg" alt="CTR Screenshot" />
+        <div class="ctr">8.6%</div>
+      </div>
+      <div class="screen">
+        <img src="ctr/02.jpg" alt="CTR Screenshot" />
+        <div class="ctr">8.2%</div>
+      </div>
+      <div class="screen">
+        <img src="ctr/03.jpg" alt="CTR Screenshot" />
+        <div class="ctr">7.7%</div>
+      </div>
+      <div class="screen">
+        <img src="ctr/04.jpg" alt="CTR Screenshot" />
+        <div class="ctr">7.4%</div>
+      </div>
+      <div class="screen">
+        <img src="ctr/05.jpg" alt="CTR Screenshot" />
+        <div class="ctr">8.5%</div>
+      </div>
+      <div class="screen">
+        <img src="ctr/06.jpg" alt="CTR Screenshot" />
+        <div class="ctr">6.8%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Testimonials</span>
+      <h2 style="margin-top:16px">What Creators Are Saying</h2>
+      <p>Trusted by YouTubers who take their growth seriously.</p>
+    </div>
+
+    <div class="tcards">
+      <div class="tcard">
+        <div class="who">
+          <div class="avatar"><img src="avatars/srt-len.jpg" alt="SRT Len" /></div>
+          <div>
+            <div class="name">SRT Len <span class="verified">✓</span></div>
+            <div class="sub">1.08M subscribers</div>
+          </div>
+        </div>
+        <blockquote>"All videos are consistently hitting 6–8% CTR with 10–20M impressions. One thumbnail reached 8.5% CTR at 10M impressions — the best performing one on the channel."</blockquote>
+      </div>
+
+      <div class="tcard">
+        <div class="who">
+          <div class="avatar"><img src="avatars/phil-pro.jpg" alt="PhilPro" /></div>
+          <div>
+            <div class="name">PhilPro <span class="verified">✓</span></div>
+            <div class="sub">190K subscribers</div>
+          </div>
+        </div>
+        <blockquote>"Makes any of my ideas come to life and allows me to not limit on my video ideas just because I can't make the thumbnail. 1000% suggest to hire this guy!"</blockquote>
+      </div>
+      <div class="tcard">
+        <div class="who">
+          <div class="avatar"><img src="avatars/miles-madeit.jpg" alt="MilesMadeit" /></div>
+          <div>
+            <div class="name">MilesMadeit <span class="verified">✓</span></div>
+            <div class="sub">1.48K subscribers</div>
+          </div>
+        </div>
+        <blockquote>"Vlad is the goat, he does exactly what you need and he does it crazy fast💨"</blockquote>
+      </div>
+
+      <div class="tcard">
+        <div class="who">
+          <div class="avatar"><img src="avatars/Bearded-Viking-WoodWorks.jpg" alt="BeardedVikingWoodWorks" /></div>
+          <div>
+            <div class="name">BeardedVikingWoodWorks <span class="verified">✓</span></div>
+            <div class="sub">281K subscribers</div>
+          </div>
+        </div>
+        <blockquote>"I thought I was good at making my own thumbnails, that was until Vlad reached out to me and gave me a free sample thumbnail. I was so impressed that I decided to hire him and have never regretted it. He makes some of the best thumbnails I've seen. He truly is the best and he is affordable. He's helped my channel grow and reach millions of new people. If you want great thumbnails at a reasonable price I recommend Vlad!"</blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Pricing</span>
+      <h2 style="margin-top:16px">Choose What Fits</h2>
+      <p>No packages you don't need. Just what your channel actually requires.</p>
+    </div>
+
+    <div class="prices">
+      <div class="price">
+        <h3>Single Shot</h3>
+        <p class="lead">Perfect for creators who need one high-impact thumbnail fast.</p>
+        <ul>
+          <li>1 thumbnail</li>
+          <li>Topic research &amp; concept creation</li>
+          <li>Unlimited revisions</li>
+          <li>24–36h delivery</li>
+          <li>Direct communication</li>
+        </ul>
+        <a class="btn-outline" href="#contact">Get a Quote</a>
+      </div>
+
+      <div class="price featured">
+        <span class="tag">Most Popular</span>
+        <h3>Split Test</h3>
+        <p class="lead">Perfect for creators who want to A/B test and maximize CTR.</p>
+        <ul>
+          <li>3 thumbnails</li>
+          <li>Strategy-driven concepts for A/B testing</li>
+          <li>Unlimited revisions</li>
+          <li>24–48h delivery</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="btn-primary" href="#contact" style="justify-content:center">Get a Quote</a>
+      </div>
+
+      <div class="price">
+        <h3>Refresh</h3>
+        <p class="lead">Perfect for creators who want to revive an underperforming video.</p>
+        <ul>
+          <li>1 redesigned thumbnail</li>
+          <li>Improved composition, clarity &amp; visual impact</li>
+          <li>Unlimited revisions</li>
+          <li>12–36h delivery</li>
+          <li>Discounted rate</li>
+        </ul>
+        <a class="btn-outline" href="#contact">Get a Quote</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container contact-wrap">
+    <span class="eyebrow">Contact</span>
+    <h2 style="font-size:clamp(36px,5vw,56px); margin-top:16px">Let's Talk</h2>
+    <p style="margin:14px auto 0; max-width:560px; font-size:17px">Got a video dropping soon? Let's make sure the thumbnail does its job.</p>
+
+    <div class="socials">
+      <a class="social" href="https://t.me/vladprotasov" aria-label="Telegram">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.023 9.53c-.144.643-.529.8-1.073.498l-2.967-2.185-1.432 1.38c-.158.158-.291.291-.598.291l.213-3.023 5.506-4.972c.24-.213-.052-.331-.372-.118L6.09 14.137 3.168 13.23c-.638-.2-.65-.638.133-.945l10.934-4.214c.53-.194.994.13.327.177z"/></svg>
+        Telegram
+      </a>
+      <a class="social" href="https://wa.me/79803653616" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+      <a class="social" href="https://instagram.com/vladthumb" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        Instagram
+      </a>
+      <a class="social" href="https://discord.com/users/1071657708157145128" aria-label="Discord">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.3 4.4A19 19 0 0 0 15.4 3l-.2.5a17.1 17.1 0 0 0-6.4 0L8.6 3a19 19 0 0 0-4.9 1.4A20.4 20.4 0 0 0 .5 18a19 19 0 0 0 5.8 2.9l1.2-1.6a12.3 12.3 0 0 1-2-1l.5-.3a13.5 13.5 0 0 0 12 0l.5.3a12.3 12.3 0 0 1-2 1l1.2 1.6a19 19 0 0 0 5.8-2.9 20.4 20.4 0 0 0-3.2-13.6ZM8.5 14.9a2 2 0 0 1-1.9-2.1 2 2 0 0 1 1.9-2.1 2 2 0 0 1 1.9 2.1 2 2 0 0 1-1.9 2.1Zm7 0a2 2 0 0 1-1.9-2.1 2 2 0 0 1 1.9-2.1 2 2 0 0 1 1.9 2.1 2 2 0 0 1-1.9 2.1Z"/></svg>
+        Discord
+      </a>
+      <a class="social" href="https://www.behance.net/vladthumb" aria-label="Behance">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M6.938 4.503c.702 0 1.34.06 1.92.188.577.13 1.07.33 1.485.61.41.28.733.65.96 1.12.225.47.34 1.05.34 1.73 0 .74-.17 1.36-.507 1.86-.338.5-.837.9-1.502 1.22.906.26 1.576.72 2.022 1.37.448.66.665 1.45.665 2.36 0 .75-.13 1.39-.41 1.93-.28.55-.67 1-1.16 1.35-.48.348-1.05.6-1.67.767-.61.165-1.24.254-1.9.254H0V4.51h6.938zm-.34 4.888c.56 0 1.02-.13 1.37-.4.345-.27.52-.69.52-1.25 0-.32-.06-.59-.16-.8-.1-.21-.25-.38-.44-.5-.19-.12-.4-.2-.64-.25-.24-.05-.49-.07-.77-.07H2.69v3.27h3.91zm.1 5.26c.29 0 .565-.03.82-.09.26-.06.495-.15.7-.3.205-.15.37-.34.49-.58.12-.25.18-.55.18-.9 0-.7-.19-1.21-.57-1.53-.38-.32-.89-.48-1.52-.48H2.69v3.88h4.008zm9.69-1.74c.33.32.82.48 1.45.48.45 0 .84-.11 1.16-.34.32-.23.52-.48.6-.74h2.3c-.37 1.1-.93 1.89-1.67 2.37-.74.47-1.63.71-2.68.71-.73 0-1.38-.12-1.97-.34-.59-.23-1.09-.56-1.51-.99-.41-.42-.73-.94-.96-1.53-.22-.59-.34-1.24-.34-1.95 0-.68.12-1.33.35-1.92.23-.6.56-1.11.98-1.55.42-.43.93-.77 1.51-1.01.58-.24 1.23-.36 1.93-.36.79 0 1.49.15 2.08.44.59.3 1.07.71 1.46 1.23.38.52.66 1.12.83 1.79.17.67.23 1.38.19 2.12h-6.84c0 .64.22 1.23.55 1.55zm2.52-4.17c-.27-.3-.69-.45-1.26-.45-.37 0-.67.06-.92.19-.25.12-.45.28-.6.46-.15.18-.26.38-.32.59-.07.2-.1.4-.11.57h3.78c-.07-.61-.28-1.07-.55-1.36zm-3.54-4.8h4.86v1.3h-4.86V4.74z"/></svg>
+        Behance
+      </a>
+      <a class="social" href="https://x.com/vladthumb" aria-label="X">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18.9 2H22l-7.5 8.6L23.4 22h-7l-5.5-7.2L4.5 22H1.4l8-9.2L.6 2h7.2l5 6.6L18.9 2Zm-1.2 18h1.9L6.4 4H4.4l13.3 16Z"/></svg>
+        X
+      </a>
+    </div>
+
+    <a class="email" href="mailto:protasovvlad667@gmail.com">protasovvlad667@gmail.com</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">FAQ</span>
+      <h2 style="margin-top:16px">Frequently Asked</h2>
+    </div>
+
+    <div class="faq">
+      <details>
+        <summary>Do you offer discounts for bulk orders?</summary>
+        <div class="answer">Yes — ordering 4+ thumbnails regularly? Let's talk about a better rate. The more consistent the work, the better the deal.</div>
+      </details>
+      <details>
+        <summary>How fast do you deliver?</summary>
+        <div class="answer">Usually 24–48 hours. Got an urgent upload? Drop me a message and I'll see what I can do.</div>
+      </details>
+      <details>
+        <summary>How does it work?</summary>
+        <div class="answer">Send me the video title and any ideas or references you have — I'll take it from there. First concepts come fast, then we refine together until it's perfect.</div>
+      </details>
+      <details>
+        <summary>How many revisions do I get?</summary>
+        <div class="answer">Unlimited — until you're happy. Small tweaks like text or colors are always included. A completely different layout counts as a new request.</div>
+      </details>
+      <details>
+        <summary>Can you improve an existing thumbnail?</summary>
+        <div class="answer">Absolutely. If you have older videos still getting views but underperforming on clicks, a fresh thumbnail can make a real difference. I offer discounted rates for redesigns.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="brand"><span>Vlad</span> · Thumbnail Designer for YouTubers</div>
+    <div class="fsocials">
+      <a href="https://t.me/vladprotasov" aria-label="Telegram"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.023 9.53c-.144.643-.529.8-1.073.498l-2.967-2.185-1.432 1.38c-.158.158-.291.291-.598.291l.213-3.023 5.506-4.972c.24-.213-.052-.331-.372-.118L6.09 14.137 3.168 13.23c-.638-.2-.65-.638.133-.945l10.934-4.214c.53-.194.994.13.327.177z"/></svg></a>
+      <a href="https://wa.me/79803653616" aria-label="WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></a>
+      <a href="https://instagram.com/vladthumb" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://discord.com/users/1071657708157145128" aria-label="Discord"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.4A19 19 0 0 0 15.4 3l-.2.5a17.1 17.1 0 0 0-6.4 0L8.6 3a19 19 0 0 0-4.9 1.4A20.4 20.4 0 0 0 .5 18a19 19 0 0 0 5.8 2.9l1.2-1.6a12.3 12.3 0 0 1-2-1l.5-.3a13.5 13.5 0 0 0 12 0l.5.3a12.3 12.3 0 0 1-2 1l1.2 1.6a19 19 0 0 0 5.8-2.9 20.4 20.4 0 0 0-3.2-13.6Z"/></svg></a>
+      <a href="https://www.behance.net/vladthumb" aria-label="Behance"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.938 4.503c.702 0 1.34.06 1.92.188.577.13 1.07.33 1.485.61.41.28.733.65.96 1.12.225.47.34 1.05.34 1.73 0 .74-.17 1.36-.507 1.86-.338.5-.837.9-1.502 1.22.906.26 1.576.72 2.022 1.37.448.66.665 1.45.665 2.36 0 .75-.13 1.39-.41 1.93-.28.55-.67 1-1.16 1.35-.48.348-1.05.6-1.67.767-.61.165-1.24.254-1.9.254H0V4.51h6.938zm-.34 4.888c.56 0 1.02-.13 1.37-.4.345-.27.52-.69.52-1.25 0-.32-.06-.59-.16-.8-.1-.21-.25-.38-.44-.5-.19-.12-.4-.2-.64-.25-.24-.05-.49-.07-.77-.07H2.69v3.27h3.91zm.1 5.26c.29 0 .565-.03.82-.09.26-.06.495-.15.7-.3.205-.15.37-.34.49-.58.12-.25.18-.55.18-.9 0-.7-.19-1.21-.57-1.53-.38-.32-.89-.48-1.52-.48H2.69v3.88h4.008zm9.69-1.74c.33.32.82.48 1.45.48.45 0 .84-.11 1.16-.34.32-.23.52-.48.6-.74h2.3c-.37 1.1-.93 1.89-1.67 2.37-.74.47-1.63.71-2.68.71-.73 0-1.38-.12-1.97-.34-.59-.23-1.09-.56-1.51-.99-.41-.42-.73-.94-.96-1.53-.22-.59-.34-1.24-.34-1.95 0-.68.12-1.33.35-1.92.23-.6.56-1.11.98-1.55.42-.43.93-.77 1.51-1.01.58-.24 1.23-.36 1.93-.36.79 0 1.49.15 2.08.44.59.3 1.07.71 1.46 1.23.38.52.66 1.12.83 1.79.17.67.23 1.38.19 2.12h-6.84c0 .64.22 1.23.55 1.55zm2.52-4.17c-.27-.3-.69-.45-1.26-.45-.37 0-.67.06-.92.19-.25.12-.45.28-.6.46-.15.18-.26.38-.32.59-.07.2-.1.4-.11.57h3.78c-.07-.61-.28-1.07-.55-1.36zm-3.54-4.8h4.86v1.3h-4.86V4.74z"/></svg></a>
+      <a href="https://x.com/vladthumb" aria-label="X"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.6L23.4 22h-7l-5.5-7.2L4.5 22H1.4l8-9.2L.6 2h7.2l5 6.6L18.9 2Zm-1.2 18h1.9L6.4 4H4.4l13.3 16Z"/></svg></a>
+    </div>
+    <p>protasovvlad667@gmail.com</p>
+    <small>© 2025 Vlad. All rights reserved.</small>
+  </div>
+</footer>
+
+<script>
+  // Open external links in new tab
+  document.querySelectorAll('a[href^="http"]').forEach(a => {
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+  });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('section > .container > *').forEach(el => {
+    el.classList.add('reveal'); io.observe(el);
+  });
+
+  // Marquee: smooth JS-driven autoplay + drag with inertia
+  document.querySelectorAll('.marquee').forEach(m => {
+    const track = m.querySelector('.marquee-track');
+    const dir = m.dataset.dir === 'right' ? 1 : -1;
+    const baseSpeedPxSec = parseFloat(m.dataset.speed) || 45;
+    const baseVel = dir * baseSpeedPxSec / 1000; // px per ms
+
+    let half = 0;
+    const measure = () => { half = track.scrollWidth / 2; };
+    measure();
+    if (window.ResizeObserver) new ResizeObserver(measure).observe(track);
+    window.addEventListener('load', measure);
+
+    let pos = dir === 1 ? -half : 0;
+    let velocity = baseVel;
+    let target = baseVel;
+    let hovering = false;
+    let dragging = false;
+    let lastX = 0, lastT = 0;
+    let lastFrame = 0;
+
+    const wrap = () => {
+      if (half <= 0) return;
+      while (pos <= -half) pos += half;
+      while (pos > 0) pos -= half;
+    };
+
+    const apply = () => { track.style.transform = `translate3d(${pos.toFixed(2)}px,0,0)`; };
+    apply();
+
+    const tick = (now) => {
+      const dt = lastFrame ? Math.min(40, now - lastFrame) : 16;
+      lastFrame = now;
+      if (!dragging) {
+        velocity += (target - velocity) * 0.06;
+        pos += velocity * dt;
+        wrap();
+        apply();
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    m.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse') { hovering = true; if (!dragging) target = 0; }
+    });
+    m.addEventListener('pointerleave', (e) => {
+      if (e.pointerType === 'mouse') { hovering = false; if (!dragging) target = baseVel; }
+    });
+
+    m.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      m.classList.add('dragging');
+      lastX = e.clientX; lastT = performance.now();
+      velocity = 0;
+      try { m.setPointerCapture(e.pointerId); } catch {}
+      e.preventDefault();
+    });
+
+    m.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const now = performance.now();
+      const dx = e.clientX - lastX;
+      const dt = Math.max(1, now - lastT);
+      pos += dx;
+      velocity = dx / dt;
+      wrap();
+      apply();
+      lastX = e.clientX; lastT = now;
+    });
+
+    const release = (e) => {
+      if (!dragging) return;
+      dragging = false;
+      m.classList.remove('dragging');
+      try { m.releasePointerCapture(e.pointerId); } catch {}
+      target = hovering ? 0 : baseVel;
+    };
+    m.addEventListener('pointerup', release);
+    m.addEventListener('pointercancel', release);
+  });
+
+</script>
+
+</body>
+</html>
